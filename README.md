@@ -90,7 +90,7 @@ Read [CONTRIBUTING.md](./CONTRIBUTING.md) for code standards and PR guidelines.
 
 ## Maintainers
 
-Firebase setup and deployment are managed by the project lead (Divij Kohli). Contributors do **not** need to set up Firebase or authentication logic.
+Firebase setup and deployment are managed by software leads (Divij Kohli, Mayank Jain). Contributors do **not** need to set up Firebase or authentication logic.
 
 ---
 
