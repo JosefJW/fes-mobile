@@ -1,23 +1,37 @@
-import { StyleSheet, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { useState } from 'react';
 import { router } from 'expo-router';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
-  const handleLogin = () => {
-    // TODO: Implement actual authentication
+  const handleLogin = async () => {
+    if (!username.trim() || !password.trim()) {
+      Alert.alert('Error', 'Please enter both username and password');
+      return;
+    }
+
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const result = await login(username.trim(), password);
+      
+      if (result.success) {
+        // Navigate to home on successful login
+        router.replace('/functional/home' as any);
+      } else {
+        Alert.alert('Login Failed', result.error || 'An error occurred');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'An unexpected error occurred');
+    } finally {
       setLoading(false);
-      // Navigate to home on successful login
-      router.replace('/functional/home' as any);
-    }, 1000);
+    }
   };
 
   return (
@@ -30,15 +44,14 @@ export default function LoginScreen() {
           <ThemedText type="title" style={styles.title}>Welcome Back</ThemedText>
           
           <View style={styles.inputContainer}>
-            <ThemedText style={styles.label}>Email</ThemedText>
+            <ThemedText style={styles.label}>Username</ThemedText>
             <TextInput
               style={styles.input}
-              placeholder="Enter your email"
+              placeholder="Enter your username"
               placeholderTextColor="#999"
-              value={email}
-              onChangeText={setEmail}
+              value={username}
+              onChangeText={setUsername}
               autoCapitalize="none"
-              keyboardType="email-address"
             />
           </View>
 

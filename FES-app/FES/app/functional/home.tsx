@@ -4,6 +4,7 @@ import { ThemedView } from '@/components/themed-view';
 import { useRouter, Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from 'react-native';
+import { useAuth } from '@/contexts/AuthContext';
 
 type DeviceStatusCardProps = {
   title: string;
@@ -26,16 +27,22 @@ type QuickActionProps = {
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { logout, user } = useAuth();
 
-  const handleLogout = () => {
-    // TODO: Implement logout logic
+  const handleLogout = async () => {
+    await logout();
     router.replace('/(auth)/login' as any);
   };
 
   return (
     <ThemedView style={styles.container}>
       <View style={styles.header}>
-        <ThemedText type="title" style={styles.title}>FES Device Control</ThemedText>
+        <View>
+          <ThemedText type="title" style={styles.title}>FES Device Control</ThemedText>
+          {user && (
+            <ThemedText style={styles.welcomeText}>Welcome, {user.name}!</ThemedText>
+          )}
+        </View>
         <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
           <Ionicons name="log-out-outline" size={24} color="#007AFF" />
         </TouchableOpacity>
@@ -153,6 +160,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '700',
+  },
+  welcomeText: {
+    fontSize: 16,
+    color: '#8E8E93',
+    marginTop: 4,
   },
   logoutButton: {
     padding: 8,

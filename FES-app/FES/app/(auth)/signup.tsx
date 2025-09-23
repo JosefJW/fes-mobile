@@ -1,31 +1,51 @@
-import { StyleSheet, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { StyleSheet, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { useState } from 'react';
 import { router } from 'expo-router';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function SignupScreen() {
   const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const { signup } = useAuth();
 
-  const handleSignup = () => {
-    // TODO: Implement actual signup
-    if (password !== confirmPassword) {
-      // TODO: Show error to user
-      console.log("Passwords don't match");
+  const handleSignup = async () => {
+    // Validation
+    if (!name.trim() || !username.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
+      Alert.alert('Error', 'Please fill in all fields');
       return;
     }
-    
+
+    if (password !== confirmPassword) {
+      Alert.alert('Error', "Passwords don't match");
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert('Error', 'Password must be at least 6 characters long');
+      return;
+    }
+
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const result = await signup(username.trim(), email.trim(), password, name.trim());
+      
+      if (result.success) {
+        // Navigate to home on successful signup
+        router.replace('/functional/home' as any);
+      } else {
+        Alert.alert('Signup Failed', result.error || 'An error occurred');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'An unexpected error occurred');
+    } finally {
       setLoading(false);
-      // Navigate to home on successful signup
-      router.replace('/functional/home' as any);
-    }, 1000);
+    }
   };
 
   return (
@@ -46,6 +66,18 @@ export default function SignupScreen() {
                 placeholderTextColor="#999"
                 value={name}
                 onChangeText={setName}
+              />
+            </View>
+
+            <View style={styles.inputContainer}>
+              <ThemedText style={styles.label}>Username</ThemedText>
+              <TextInput
+                style={styles.input}
+                placeholder="Choose a username"
+                placeholderTextColor="#999"
+                value={username}
+                onChangeText={setUsername}
+                autoCapitalize="none"
               />
             </View>
 
