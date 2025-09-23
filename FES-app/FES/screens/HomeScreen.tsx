@@ -27,13 +27,23 @@ export default function HomeScreen() {
                     , padding: 10, borderRadius: 8, backgroundColor: '#fafafaff'
                     }}
                     onPress={() => {
-                        console.log('Navigating to Real-Time Data screen');
-                        // Use Expo Router's Link component for navigation
                         router.replace('/RealTimeData');
                     }}
                 >
                     <ThemedText type="link" style={{ fontSize: 18 }}>
                         Real-Time Data
+                    </ThemedText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{ alignSelf: 'flex-start' 
+                    , padding: 10, borderRadius: 8, backgroundColor: '#fafafaff'
+                    }}
+                    onPress={() => {
+                        router.replace('/TodoList');
+                    }}
+                >
+                    <ThemedText type="link" style={{ fontSize: 18 }}>
+                        Todo List
                     </ThemedText>
                 </TouchableOpacity>
             </ThemedView>

@@ -15,8 +15,10 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false,animation: 'none',}} />
+        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal',animation: 'none', }} />
+        <Stack.Screen name="RealTimeData" options={{ headerShown: false,title: 'Real-Time Data',animation: 'none', }} />
+        <Stack.Screen name="TodoList" options={{ headerShown: false,title: 'Todo List',animation: 'none', }} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
